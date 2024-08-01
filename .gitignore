@@ -4,3 +4,5 @@
 /docker/jaisocx-http/logs/jaisocx-server.log
 /docker/mysql/volumes/
 /drupal-10.2.5/vendor/
+/drupal-10.2.5/sites/default/files/
+
