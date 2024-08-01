@@ -1,0 +1,58 @@
+services:
+  php:
+    build:
+      context: ./docker/php
+      args:
+        TIMEZONE: "Europe/Zurich"
+    volumes:
+      - ./drupal-10.2.5/:/var/www/drupal/:delegated
+      - ./docker/php/logs/:/drupal-logs/
+    networks:
+      - jaisocx
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    environment:
+      PHP_IDE_CONFIG: "serverName=docker"
+
+
+  jaisocx_http:
+    build:
+      context: ./docker/jaisocx-http
+    volumes:
+      - ./docker/jaisocx-http/conf/:/usr/lib/jaisocx-http/apps/congratulations/conf/
+      - ./docker/jaisocx-http/etc/:/usr/lib/jaisocx-http/etc/
+      - ./docker/jaisocx-http/logs/:/usr/lib/jaisocx-http/logs/
+      - ./drupal-10.2.5/:/var/www/drupal/:delegated
+    depends_on:
+      - php
+    ports:
+      - 2293:2293
+    networks:
+      - jaisocx
+    environment:
+      PHP_FPM_HOST: "php:9000"
+      JAVA_XMS: "2g"
+      JAVA_XMX: "2g"
+  #      php hostname like php service name="php", port from docker/php/conf/php-fpm.d/www.conf "listen" directive (listen = 127.0.0.1:9000)
+
+
+  mysql:
+    image: mysql:8.0
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    ports:
+      - 3319:3306
+    volumes:
+      - ./docker/mysql/volumes:/var/lib/mysql:delegated
+      - ./docker/mysql/init:/docker-entrypoint-initdb.d:delegated
+      - ./docker/mysql/init/conf/mysqld.cnf:/etc/mysql/mysql.conf.d/mysqld.cnf:delegated
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    networks:
+      - jaisocx
+
+
+networks:
+  jaisocx:
+    driver: bridge
+

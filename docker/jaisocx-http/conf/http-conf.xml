@@ -1,0 +1,23 @@
+<conf>
+    <conf-idm path="/usr/lib/jaisocx-http/apps/congratulations/conf/idm-conf.xml"/>
+    <conf-http>
+        <servers>
+            <server port="2293" alternative-port="2288">
+                <domain name="localhost">
+                    <alias art="folder"
+                           url="/"
+                           path="/var/www/drupal"
+                           cache="update"
+                           indexed="true"
+                           cache-except="php"
+                           list="true"
+                           each-folder-content-file-name="index.php"/>
+                    <alias art="file"
+                           url="/${any}"
+                           path="/var/www/drupal/index.php"
+                           cache="update"/>
+                </domain>
+            </server>
+        </servers>
+    </conf-http>
+</conf>
