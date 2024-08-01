@@ -1,0 +1,6 @@
+**/.DS_Store
+
+/docker/php/logs/
+/docker/jaisocx-http/logs/jaisocx-server.log
+/docker/mysql/volumes/
+/drupal-10.2.5/vendor/
